@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registro Messinger</title>
+    <script src="/usuario.js"></script>
+    <link rel="stylesheet" href="css/registro.css">
+</head>
+<body>
+
+    
+   <h1 id="titulo_registro">Registro de Usuario</h1>
+
+
+   <div id="contenedor_registro">
+
+        <div id="contenedorP_registro">
+            <p id="p_registro">Registro</p>
+        </div>
+        
+
+       <form action="/registro" method="post" id="formulario" name="formulario">
+          
+            
+            <div   class="div_label">
+                <label for="usuario" >Número de telefono</label>
+            </div>
+            <div   class="div_input"> 
+                <input type="text" name="id" id="id" placeholder="Número de telefono" tabindex="1" required minlength="10" maxlength="10" >
+            </div>
+    
+              <div  class="div_label">
+                <label for="Nombre">Nombre</label>
+            </div>
+            <div  class="div_input">
+                <input type="text" name="nombre" id="nombre" placeholder="Nombre" tabindex="2" required> 
+            </div>
+    
+            <div  class="div_label">
+                <label for="contrasena">Contraseña</label>
+            </div>
+            <div  class="div_input">
+                <input type="password" name="contrasena" id="contrasena" placeholder="Contraseña" tabindex="2" minlength="5"required>
+            </div>
+            
+            <div  class="div_label">
+                <label for="confirmarRegistroContrasena">Confirmar Contraseña</label>
+            </div>
+    
+            <div  class="div_input">
+                <input type="password" name="confirmarContrasena" id="confirmarContrasena" placeholder="Contraseña" tabindex="3" minlength="5" required>
+            </div>
+
+            <div id="contenedor_abajo">
+
+                <div id="contenedor_regresar">
+
+                    <a href="/" id="regresar">Regresar</a>
+
+                </div>
+                <button type="submit" id="boton">Enviar</button>
+            </div>
+            
+       </form>  
+
+   </div>
+
+</body>
+</html>

@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login messinger</title>
+    <link rel="stylesheet" href="css/index.css">
+</head>
+<body>
+
+    <article id="bienvenida_login">
+
+        <h1> ¡Bienvenido a Messinger!</h1>
+        <h3>Para ingresar, por favor inicia sesión con tu usuario y contrraseña</h3>
+        
+    </article>
+
+    <div id="contenedor_formulario">
+        <p id="ttl_iniciarSesion">Iniciar Sesión</p>
+
+        <form action="/login" method="post" id="formulario">
+            
+            <div id="label_usuario"  class="usuario">
+                <label for="usuario">Número de telefono</label>
+            </div>
+
+            <div id="usuario" class="usuario"> 
+                <input type="text" name="id" id="usuario" placeholder="Número de telefono" tabindex="1" pattern="^\d{10}$" minlength="10" maxlength="10" required >
+            </div>
+            <div id="label_contrasena" class="contrasena">
+                <label for="contrasena">Contraseña</label>
+            </div>
+            <div id="contrasena" class="contrasena">
+                <input type="password" name="contrasena" id="contrasena" placeholder="Contraseña" tabindex="2" required>
+            </div>
+            
+            <div id="div_boton">
+                
+                <button type="submit">Enviar</button>
+
+            </div>
+    
+        </form>
+
+        <div id="div_Registro">
+            <p>Si no tiene cuenta haga <a href="/registroVista">click aquí</a></p>
+        </div>
+
+        <div id="contenedor_span">
+            <span th:text="${sesionInvalida}" id="sesion" name ="sesion"></span>
+            <span th:if = "${error}" th:text ="${error}" style="color: red"> </span>
+            <span th:if = "${registro}" th:text ="${registro}" style="color: green"> </span>
+        </div>
+
+    </div>
+
+
+</body>
+</html>

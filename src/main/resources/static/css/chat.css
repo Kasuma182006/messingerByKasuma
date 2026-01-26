@@ -1,0 +1,137 @@
+*{
+    box-sizing: border-box;
+    transition: all 0.8s ease;
+}
+
+
+body, html {
+    margin: 0;
+    padding: 0;
+    font-size:15px ;
+}
+
+
+body{
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    background-image: url("/img/imagenFondoChat5.jpg");
+    background-position: center center;
+    background-size: cover;
+    background-repeat: no-repeat;
+    font-family: sans-serif;
+    height: 100vh;
+    width: 100vw;
+}
+
+
+#contenedorUsername{
+    width:100% ;
+    height:10%; 
+    font-size: 25px;
+    display: flex;
+
+}
+
+
+
+
+#p_username{
+    margin-left: 5px;
+}
+
+#contenedor_padre {
+    width:100% ;
+    height:90%;
+    display: flex;
+    justify-content: center;
+}
+
+#contenedor_chat{
+    width:20%;
+    height: 90%;
+    backdrop-filter: blur(10px);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 30px;
+}
+
+
+#listaContactos{
+    width: 80%;
+    height: 80%;
+    overflow-y: auto;
+    border: solid 0.5px #edece4;
+    border-radius: 20px;
+
+}
+
+div.contactos{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #555555;
+    height:8% ;
+    border-bottom: solid 0.5px #edece4;
+}
+
+p#nombreContacto {
+    text-align: center;
+    margin: 0;
+    color: #9B66BB;
+}
+
+div.contactos:hover{
+    background: #989898;
+}
+
+#contenedorEncabezadoChat{
+    width: 100%;
+    height: 8%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+#nombreContacto{
+    color: #9B66BB;
+}
+
+#contenedorBackIcon{
+    width: 100%;
+    height: 8%;
+    display: flex;
+    justify-content: flex-start;
+    padding-left: 20px;
+    padding-top: 15px;
+}
+
+
+#botonChat{
+    margin-left: 10px;
+    width: 10%;
+    height: 70%;
+    background-color: #9a4cca;
+    border-radius: 20px;
+    border: solid 1px black;  
+}
+
+#botonChat:hover {
+    background-color: #9d69bd
+}
+
+.contenedorMensaje{
+    width: 100%;
+    height: auto;
+    margin-top: 10px;
+    overflow-y: auto;
+}
+
+.mensaje{
+
+    margin: 0;
+    width: auto;
+    height: auto;
+    color:  #9d69bd;
+}
