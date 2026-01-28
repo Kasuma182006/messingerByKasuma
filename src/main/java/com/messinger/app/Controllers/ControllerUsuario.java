@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.messinger.app.Models.contactos.contactos;
 import com.messinger.app.Models.contactos.contactosDTO;
 import com.messinger.app.Models.menssages.MessagesModel;
 import com.messinger.app.Models.usuario.Usuario;
@@ -24,6 +25,7 @@ import com.messinger.app.Repositories.repositorieUsuario;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
+
 
 
 @Controller
@@ -148,5 +150,19 @@ public class ControllerUsuario {
         }
     }
 
+    @PostMapping("/agregarContacto")
+    public String agregarContacto(@ModelAttribute contactos contacto, HttpServletRequest request) {
+        HttpSession sesion = request.getSession(false);
+        if (sesion == null){
+            return "redirec:/";
+        }
+        
+        contactos newContacto = new contactos();
+        newContacto.setId_contacto(contacto.getId_contacto());
+        newContacto.setId_usuario((String)sesion.getAttribute("id"));
+        contactoRepositorie.save(newContacto);
+        return "redirect:/chat";
+    }
+    
 
 }

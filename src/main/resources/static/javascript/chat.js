@@ -10,16 +10,18 @@ document.addEventListener("DOMContentLoaded", function(){
 
     for (let c of contacto) {
         c.addEventListener("click",function(){
-        listaContactos.style.display="none";
-        listaContactos.style.zIndex="0";
-        console.log("si hay contacto")
-        const nombreContacto = c.querySelector(".nombreContacto").innerText;
+            listaContactos.style.display="none";
+            listaContactos.style.zIndex="0";
+            console.log("si hay contacto")
+            const nombreContacto = c.querySelector(".nombreContacto").innerText;
 
-        crearChat(nombreContacto);
-        console.log(nombreContacto)
+            crearChat(nombreContacto);
+            console.log(nombreContacto)
 
         })
     }
+
+    agregarContacto();
  
     
     
@@ -38,11 +40,11 @@ document.addEventListener("DOMContentLoaded", function(){
 
                 mostrarMensaje(msg,"receptor")
             });
-    });
+        });
 
     
 
-}
+    }
     function crearChat(nombre){
 
         const contenedorPadre = document.getElementById("contenedor_padre");
@@ -223,5 +225,50 @@ function mostrarMensaje(texto, usuario){
             marginLeft: "20px"
         })
     }
+
+}
+function agregarContacto(){
+    let contenedorChat = document.getElementById("contenedor_chat");
+    let boton = document.getElementById("registrarContacto");
+    boton.addEventListener("click", function(){
+        contenedorChat.style.display= "none";
+
+        CrearFormularioAgregarContacto()
+
+    })
+}
+
+
+function CrearFormularioAgregarContacto(){
+    //crear objetos
+   let contenedorFormulario =document.createElement("div");
+   let contenedorPadre = document.getElementById("contenedor_padre")
+   let formulario = document.createElement("form");
+   let input = document.createElement("input");
+   let boton = document.createElement("button");
+
+    // agregar id
+   formulario.id = "formularioContacto"
+   boton.id="botonFormlarioContacto"
+   input.id = "inputFormularioContacto"
+   input.name="id_contacto"
+   contenedorFormulario.id = "contenedorFormulario";
+
+   //agregar hijo
+   contenedorPadre.appendChild(contenedorFormulario);
+    contenedorFormulario.appendChild(formulario);
+    formulario.appendChild(input);
+    formulario.appendChild(boton);
+
+    //atributos
+    formulario.setAttribute("action","/agregarContacto");
+    formulario.setAttribute("method","post");
+    input.setAttribute("placeholder","Agregar número de telefono")
+    input.setAttribute("minlength","10");
+    input.setAttribute("maxlength","10");
+    input.setAttribute("required", "required");
+    input.setAttribute("type","number")
+    boton.setAttribute("type", "submit")
+    boton.innerText="Registrar";
 
 }
