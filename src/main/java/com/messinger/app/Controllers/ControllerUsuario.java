@@ -17,9 +17,11 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.messinger.app.Models.contactos.contactos;
 import com.messinger.app.Models.contactos.contactosDTO;
+import com.messinger.app.Models.menssages.Mensajes;
 import com.messinger.app.Models.menssages.MessagesModel;
 import com.messinger.app.Models.usuario.Usuario;
 import com.messinger.app.Models.usuario.modelRegistro;
+import com.messinger.app.Repositories.MensajeRepositorie;
 import com.messinger.app.Repositories.contactoRepositorie;
 import com.messinger.app.Repositories.repositorieUsuario;
 
@@ -33,14 +35,16 @@ public class ControllerUsuario {
 
     public repositorieUsuario repositorieusuario;
     public contactoRepositorie contactoRepositorie;
+    public MensajeRepositorie mensajesRepositorie;
     
     @Autowired
     private SimpMessagingTemplate messagingTemplate;
 
     public ControllerUsuario(repositorieUsuario repositorieusuario,
-                             contactoRepositorie contactoRepositorie) {
+                             contactoRepositorie contactoRepositorie, MensajeRepositorie mensajeRepositorie) {
         this.repositorieusuario = repositorieusuario;
         this.contactoRepositorie = contactoRepositorie;
+        this.mensajesRepositorie = mensajeRepositorie;
     }
 
 
@@ -128,6 +132,7 @@ public class ControllerUsuario {
     @MessageMapping("/mensajes")
     public void mensajes(MessagesModel mensaje, SimpMessageHeaderAccessor accessor) {
 
+
         // 1) intentar obtener Principal (establecido por el HandshakeHandler)
         Principal principal = accessor.getUser();
         String autenticacion = null;
@@ -145,6 +150,16 @@ public class ControllerUsuario {
 
         if (autenticacion != null) {
             messagingTemplate.convertAndSendToUser(mensaje.destinatario(), "/queue/messages", mensaje.mensaje());
+            
+            Mensajes newMensaje = new Mensajes();
+
+            newMensaje.setId_emisor(autenticacion);
+            newMensaje.setId_receptor(mensaje.destinatario());
+            newMensaje.setHora(mensaje.hora());
+            newMensaje.setMensaje(mensaje.mensaje());
+
+            mensajesRepositorie.save(newMensaje);
+
         } else {
             System.out.println("El usuario no está autenticado");
         }

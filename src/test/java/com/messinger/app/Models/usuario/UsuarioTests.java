@@ -10,6 +10,7 @@ import com.messinger.app.Repositories.repositorieUsuario;
 
 @SpringBootTest
 public class UsuarioTests {
+    
     @Autowired
     public repositorieUsuario repositorie;
     

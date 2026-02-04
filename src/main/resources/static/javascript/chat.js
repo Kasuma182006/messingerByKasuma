@@ -13,10 +13,11 @@ document.addEventListener("DOMContentLoaded", function(){
             listaContactos.style.display="none";
             listaContactos.style.zIndex="0";
             console.log("si hay contacto")
-            const nombreContacto = c.querySelector(".nombreContacto").innerText;
+            const contacto = c.querySelector(".nombreContacto").innerText;
 
-            crearChat(nombreContacto);
-            console.log(nombreContacto)
+            crearChat(contacto);
+            console.log(contacto)
+            mensajes(contacto)
 
         })
     }
@@ -42,9 +43,21 @@ document.addEventListener("DOMContentLoaded", function(){
             });
         });
 
+
+    
     
 
     }
+
+
+    function mensajes (contacto){
+        fetch ("http://localhost:8085/cargarMensajes?contacto="+contacto)
+        .then (respuesta => respuesta.json())
+        .then(json => console.log(json))
+        .catch (error => console.error(error));
+        
+    }
+
     function crearChat(nombre){
 
         const contenedorPadre = document.getElementById("contenedor_padre");
@@ -191,7 +204,8 @@ function enviarMensaje(objeto){
                 stompClient.send("/app/mensajes", {}, JSON.stringify({
                     
                     destinatario: destinatario,
-                    mensaje: mensaje
+                    mensaje: mensaje,
+                    hora: Date()
                 }));
                 objeto.value = ""; 
                 mostrarMensaje(mensaje,"remitente")
