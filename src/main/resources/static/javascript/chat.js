@@ -53,9 +53,20 @@ document.addEventListener("DOMContentLoaded", function(){
     function mensajes (contacto){
         fetch ("http://localhost:8085/cargarMensajes?contacto="+contacto)
         .then (respuesta => respuesta.json())
-        .then(json => console.log(json))
+        .then(json => {
+            for (let c of json){
+
+                if (contacto != c.id_emisor){
+                    mostrarMensaje(c.mensaje,"remitente")    
+                }
+                else {
+                    mostrarMensaje(c.mensaje,"receptor")
+                }
+
+                
+            }
+        })
         .catch (error => console.error(error));
-        
     }
 
     function crearChat(nombre){
