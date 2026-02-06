@@ -11,6 +11,6 @@ import com.messinger.app.Models.menssages.MensajesCargarDto;
 
 public interface MensajeRepositorie extends JpaRepository <Mensajes,Long> {
 
-        @Query("Select new com.messinger.app.Models.menssages.MensajesCargarDto (u.mensaje, u.hora, u.id_emisor) FROM Mensajes u WHERE u.id_emisor = :id_emisor AND u.id_receptor =   :id_receptor OR u.id_emisor = :id_receptor AND u.id_receptor = :id_emisor" )
+        @Query("Select new com.messinger.app.Models.menssages.MensajesCargarDto (u.mensaje, u.hora, u.id_emisor) FROM Mensajes u WHERE u.id_emisor = :id_emisor AND u.id_receptor =   :id_receptor OR u.id_emisor = :id_receptor AND u.id_receptor = :id_emisor ORDER BY u.hora ASC" )
         List<MensajesCargarDto> cargarMensajes(@Param ("id_emisor") String id_emisor, @Param ("id_receptor") String id_receptor);
 }
