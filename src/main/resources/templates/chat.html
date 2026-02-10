@@ -29,7 +29,11 @@
                 <div class="contactos" th:each="contacto : ${contactos}"> 
                   <p class="nombreContacto" th:text="${contacto.idContacto}"></p>
                 </div>
-                <button type="button" id="registrarContacto">Añadir</button>
+
+                <div id="contenedorBtnesAñadir">
+                    <button type="button" id="registrarContacto">Añadir</button>
+                    <button type="button" id="registrarGrupo">Añadir Grupo</button>
+                </div>
                 
 
             </div>

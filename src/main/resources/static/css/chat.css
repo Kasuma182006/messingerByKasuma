@@ -82,6 +82,7 @@ div.contactos{
 
 #registrarContacto{
     margin-top: 10px;
+    margin-right: 10px;
     border-radius: 15px;
     background-color: #9d69bd;
 }
@@ -185,3 +186,32 @@ div.contactos:hover{
     margin-top: 10px;
 }
 
+
+#contenedorBtnesAñadir{
+
+    width: 100%;
+    height: auto;
+    display: flex;
+    justify-content: center;
+
+}
+
+#registrarGrupo{
+    margin-top: 10px;
+    border-radius: 15px;
+    background-color: #9d69bd;
+}
+
+
+#registrarGrupo:hover{
+    background-color: #edece4;
+}
+
+
+#formularioGrupo{
+    width: 100%;
+    height: auto;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+}

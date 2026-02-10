@@ -31,6 +31,22 @@ public class webSocketConfig implements WebSocketMessageBrokerConfigurer {
                 })
                 .addInterceptors(new UserHandshakeInterceptor())
                 .withSockJS();
+        registry.addEndpoint("/grupoMensajes")
+            .setHandshakeHandler(new DefaultHandshakeHandler() {
+                    @Override
+                    protected Principal determineUser(org.springframework.http.server.ServerHttpRequest request,
+                                                      org.springframework.web.socket.WebSocketHandler wsHandler,
+                                                      Map<String, Object> attributes) {
+                        // Si el interceptor puso userId en attributes, lo usamos
+                        Object userId = attributes.get("userId");
+                        if (userId != null) {
+                            return new StompPrincipal(userId.toString());
+                        }
+                        return super.determineUser(request, wsHandler, attributes);
+                    }
+                })
+                .addInterceptors(new UserHandshakeInterceptor())
+                .withSockJS();
     }
 
     @Override

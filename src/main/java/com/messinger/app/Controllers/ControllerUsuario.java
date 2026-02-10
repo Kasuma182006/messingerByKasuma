@@ -146,6 +146,10 @@ public class ControllerUsuario {
             }
         }
 
+     
+     
+     
+     
         System.out.println("usuario autenticado " + autenticacion + "," + mensaje.destinatario() + "," + mensaje.mensaje());
 
         if (autenticacion != null) {
@@ -165,6 +169,9 @@ public class ControllerUsuario {
         }
     }
 
+    @MessageMapping("/grupoMensajes")
+    
+
     @PostMapping("/agregarContacto")
     public String agregarContacto(@ModelAttribute contactos contacto, HttpServletRequest request) {
         HttpSession sesion = request.getSession(false);
@@ -179,5 +186,5 @@ public class ControllerUsuario {
         return "redirect:/chat";
     }
     
-
+    
 }

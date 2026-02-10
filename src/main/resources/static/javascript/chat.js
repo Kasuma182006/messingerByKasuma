@@ -110,6 +110,8 @@ document.addEventListener("DOMContentLoaded", function(){
         
     }
 
+    crearGrupo();
+
 
 })
 
@@ -297,3 +299,44 @@ function CrearFormularioAgregarContacto(){
     boton.innerText="Registrar";
 
 }
+
+
+function crearGrupo(){
+    document.getElementById("registrarGrupo").addEventListener("click",function(){
+        let contenedorChat = document.getElementById("contenedor_chat");
+        contenedorChat.style.display= "none";
+        let contenedorPadre = document.getElementById("contenedor_padre")
+        let contenedorFormulario =document.createElement("div");
+        let formulario = document.createElement("form");
+        let input = document.createElement("input");
+        let boton = document.createElement("button");
+        let select = document.createElement("select");
+        let select1= document.createElement("select");
+
+        formulario.id = "formularioGrupo";
+        boton.id="botonFormlarioGrupo";
+        input.id = "inputFormularioGrupo";
+        input.name="nombre_grupo";
+        select.className = "select";
+        select1.className = "select";
+
+        contenedorFormulario.id = "contenedorFormulario";
+        contenedorPadre.appendChild(contenedorFormulario);
+
+        contenedorFormulario.appendChild(formulario);
+        formulario.appendChild(input);
+        formulario.appendChild(select);
+        formulario.appendChild(select1);
+
+        formulario.appendChild(boton);
+
+        formulario.setAttribute("action","/agregarGrupo");
+        formulario.setAttribute("method","post");
+    })
+
+}
+
+
+
+
+
