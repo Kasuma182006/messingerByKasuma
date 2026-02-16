@@ -18,7 +18,7 @@ public class MensajesGrupos {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String id_grupo;
+    private int id_grupo;
     private String id_usuario;
     private String mensaje;
     private String hora;

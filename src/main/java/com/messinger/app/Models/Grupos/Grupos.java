@@ -14,7 +14,9 @@ import lombok.NoArgsConstructor;
 public class Grupos {
     
     @Id
-    private String id_grupo;
+    private int id_grupo;
     
     private String nombre_grupo;
+    private String id_creador;
+
 }

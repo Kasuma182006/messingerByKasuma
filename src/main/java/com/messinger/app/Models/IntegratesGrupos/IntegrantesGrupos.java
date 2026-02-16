@@ -18,7 +18,7 @@ public class IntegrantesGrupos {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     
-    private String id_grupo;
+    private int id_grupo;
     private String id_usuario;
     
 }

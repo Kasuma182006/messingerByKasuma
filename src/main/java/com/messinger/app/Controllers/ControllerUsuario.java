@@ -3,6 +3,7 @@ package com.messinger.app.Controllers;
 
 import java.security.Principal;
 import java.util.List;
+import java.util.Random;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.handler.annotation.MessageMapping;
@@ -10,11 +11,15 @@ import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.messinger.app.Models.Grupos.Grupos;
+import com.messinger.app.Models.IntegratesGrupos.IntegrantesGrupos;
 import com.messinger.app.Models.contactos.contactos;
 import com.messinger.app.Models.contactos.contactosDTO;
 import com.messinger.app.Models.menssages.Mensajes;
@@ -23,10 +28,14 @@ import com.messinger.app.Models.usuario.Usuario;
 import com.messinger.app.Models.usuario.modelRegistro;
 import com.messinger.app.Repositories.MensajeRepositorie;
 import com.messinger.app.Repositories.contactoRepositorie;
+import com.messinger.app.Repositories.repositorieGrupos;
+import com.messinger.app.Repositories.repositorieIntegrantesGrupos;
 import com.messinger.app.Repositories.repositorieUsuario;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
+
+
 
 
 
@@ -36,15 +45,20 @@ public class ControllerUsuario {
     public repositorieUsuario repositorieusuario;
     public contactoRepositorie contactoRepositorie;
     public MensajeRepositorie mensajesRepositorie;
+    public repositorieGrupos repositoriegrupos;
+    public repositorieIntegrantesGrupos repositorieintegrantesgrupos;
     
     @Autowired
     private SimpMessagingTemplate messagingTemplate;
 
     public ControllerUsuario(repositorieUsuario repositorieusuario,
-                             contactoRepositorie contactoRepositorie, MensajeRepositorie mensajeRepositorie) {
+                             contactoRepositorie contactoRepositorie, MensajeRepositorie mensajeRepositorie, repositorieGrupos repositoriegrupos, repositorieIntegrantesGrupos repositorieintegrantesgrupos) {
         this.repositorieusuario = repositorieusuario;
         this.contactoRepositorie = contactoRepositorie;
         this.mensajesRepositorie = mensajeRepositorie;
+        this.repositoriegrupos = repositoriegrupos;
+        this.repositorieintegrantesgrupos = repositorieintegrantesgrupos;
+
     }
 
 
@@ -110,9 +124,11 @@ public class ControllerUsuario {
             String idUsuario=(String) sesion.getAttribute("id");
             
             List<contactosDTO> contactos = contactoRepositorie.contactos(idUsuario);
+            List<Grupos> grupos = repositoriegrupos.findGrupos(idUsuario);
 
             modelo.addAttribute("nombreUsuario", nombre);
             modelo.addAttribute ("contactos",contactos);
+            modelo.addAttribute("grupos",grupos);
 
             System.out.println(contactos);
 
@@ -145,10 +161,6 @@ public class ControllerUsuario {
                 autenticacion = idAttr.toString();
             }
         }
-
-     
-     
-     
      
         System.out.println("usuario autenticado " + autenticacion + "," + mensaje.destinatario() + "," + mensaje.mensaje());
 
@@ -171,7 +183,6 @@ public class ControllerUsuario {
 
     @MessageMapping("/grupoMensajes")
     
-
     @PostMapping("/agregarContacto")
     public String agregarContacto(@ModelAttribute contactos contacto, HttpServletRequest request) {
         HttpSession sesion = request.getSession(false);
@@ -185,6 +196,52 @@ public class ControllerUsuario {
         contactoRepositorie.save(newContacto);
         return "redirect:/chat";
     }
-    
-    
+
+    @PostMapping("/agregarGrupo")
+    public String postMethodName(@RequestParam MultiValueMap<String,String> datos, HttpServletRequest request) {
+
+        System.out.println(datos);
+
+        HttpSession sesion = request.getSession(false);
+
+        if (sesion != null){
+            Random identificador= new Random();
+
+            int id_grupo = identificador.nextInt(1000000);
+
+            String nombreGrupo = datos.getFirst("nombre_grupo");
+
+            List<String> participantes = datos.get("participantes");
+
+            Grupos grupo = new Grupos();
+
+            grupo.setId_grupo(id_grupo);
+
+            grupo.setNombre_grupo(nombreGrupo);
+
+            grupo.setId_creador(sesion.getAttribute("id").toString());
+
+            
+            repositoriegrupos.save(grupo);
+            
+
+
+            for (String p : participantes){
+
+                IntegrantesGrupos integrantes = new IntegrantesGrupos();
+                
+                integrantes.setId_grupo(id_grupo);
+                integrantes.setId_usuario(p);
+
+                repositorieintegrantesgrupos.save(integrantes);
+
+            }
+            
+            return "redirect:/chat";
+
+        }
+
+        return "redirect:/";
+    }
+       
 }

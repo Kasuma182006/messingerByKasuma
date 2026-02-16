@@ -23,6 +23,7 @@ document.addEventListener("DOMContentLoaded", function(){
     }
 
     agregarContacto();
+
  
     
     
@@ -303,7 +304,9 @@ function CrearFormularioAgregarContacto(){
 
 function crearGrupo(){
     document.getElementById("registrarGrupo").addEventListener("click",function(){
+        let contactos = document.getElementsByClassName("nombreContacto");
         let contenedorChat = document.getElementById("contenedor_chat");
+        let selects = document.getElementsByClassName("select")
         contenedorChat.style.display= "none";
         let contenedorPadre = document.getElementById("contenedor_padre")
         let contenedorFormulario =document.createElement("div");
@@ -332,9 +335,34 @@ function crearGrupo(){
 
         formulario.setAttribute("action","/agregarGrupo");
         formulario.setAttribute("method","post");
+        input.setAttribute("placeholder", "Nombre del grupo");
+        input.setAttribute("required", "required");
+        select.setAttribute("placeholder", "Miembro");
+        boton.setAttribute("type", "submit")
+        boton.innerText = "Registrar";
+
+         for (let i of selects){
+             let valueBlanco = document.createElement("option");
+             valueBlanco.setAttribute("value","");
+             valueBlanco.className = "option";
+             i.appendChild(valueBlanco);
+             i.setAttribute("required","required")
+             i.setAttribute("name","participantes")
+                for (let c of contactos){
+                    let value = document.createElement("option");
+                    value.className = "option";
+                    value.setAttribute("value",c.innerText);
+                    value.innerText = c.innerText;
+                    i.appendChild(value);
+                   
+                    
+                }
+            }
+
     })
 
 }
+
 
 
 
