@@ -4,6 +4,7 @@ document.addEventListener("DOMContentLoaded", function(){
     
     const contacto = document.getElementsByClassName("contactos");
     const listaContactos= document.getElementById("contenedor_chat");
+    const grupos = document.getElementsByClassName("grupos");
 
     var StompClient = null;
     conectarWebosocket();
@@ -14,15 +15,80 @@ document.addEventListener("DOMContentLoaded", function(){
             listaContactos.style.zIndex="0";
             console.log("si hay contacto")
             const contacto = c.querySelector(".nombreContacto").innerText;
-
-            crearChat(contacto);
+            
+            crearChat(contacto, "contacto");
             console.log(contacto)
             mensajes(contacto)
+            
+
 
         })
     }
 
+
+    for (let g of grupos ){
+        g.addEventListener("click", function(){
+            listaContactos.style.display="none";
+            listaContactos.style.zIndex="0";
+            console.log("si hay contacto");
+            const grupo = g.querySelector(".nombreGrupo").innerText;
+
+            id= g.querySelector(".grupoId").innerText;
+            
+            crearChatGrupo(grupo, "grupo",id);
+            mensajes(grupo)
+        })
+    }
+
     agregarContacto();
+
+
+    function crearChatGrupo(grupo,tipo,id){
+        const contenedorPadre = document.getElementById("contenedor_padre");
+        /* Aquí está la creación de los elementos */
+        let contendorChat = document.createElement("div");
+        let nombreContacto= document.createElement("p");
+
+        let contenedorMensajes = document.createElement("div")
+        let contenedorInputChat = document.createElement("div");
+        let contenedorEncabezadoChat= document.createElement("div");
+        let contenedorBackIcon= document.createElement("div");
+        let grupoId = document.createElement("p");
+
+        /* Asignación de Id*/
+        contenedorEncabezadoChat.id="contenedorEncabezadoChat";
+        contendorChat.id="contenedorChat";
+        nombreContacto.id="nombreContacto";
+        contenedorMensajes.id="contenedorMensajes"
+        contenedorInputChat.id ="contenedorInputChat";
+        contenedorBackIcon.id ="contenedorBackIcon";
+        grupoId.id = "grupoId";
+
+        contendorChat.appendChild(contenedorBackIcon);
+        contendorChat.appendChild(contenedorEncabezadoChat);
+        contenedorPadre.appendChild(contendorChat);
+        contendorChat.appendChild(nombreContacto);
+    
+
+        contendorChat.appendChild(contenedorMensajes);
+        contendorChat.appendChild(contenedorInputChat);
+        
+        nombreContacto.innerHTML = grupo;
+        grupoId.innerHTML= id;
+        console.log(id);
+
+        contenedorEncabezadoChat.appendChild(nombreContacto);
+        contenedorEncabezadoChat.appendChild(grupoId);
+
+        /*Aquí están las funciones style*/
+        contenedorChat(contendorChat)
+        contenedorMensaje(contenedorMensajes)
+        contenedorInputChatStyle(contenedorInputChat,tipo);
+        contendorBackIconCreate(contenedorBackIcon);
+        
+        
+
+    }
 
  
     
@@ -51,6 +117,7 @@ document.addEventListener("DOMContentLoaded", function(){
     }
 
 
+
     function mensajes (contacto){
         fetch ("http://localhost:8085/cargarMensajes?contacto="+contacto)
         .then (respuesta => respuesta.json())
@@ -70,12 +137,13 @@ document.addEventListener("DOMContentLoaded", function(){
         .catch (error => console.error(error));
     }
 
-    function crearChat(nombre){
+    function crearChat(nombre, tipo){
 
         const contenedorPadre = document.getElementById("contenedor_padre");
         /* Aquí está la creación de los elementos */
         let contendorChat = document.createElement("div");
         let nombreContacto= document.createElement("p");
+
         let contenedorMensajes = document.createElement("div")
         let contenedorInputChat = document.createElement("div");
         let contenedorEncabezadoChat= document.createElement("div");
@@ -88,15 +156,15 @@ document.addEventListener("DOMContentLoaded", function(){
         contenedorMensajes.id="contenedorMensajes"
         contenedorInputChat.id ="contenedorInputChat";
         contenedorBackIcon.id ="contenedorBackIcon";
+
         contendorChat.appendChild(contenedorBackIcon);
         contendorChat.appendChild(contenedorEncabezadoChat);
         contenedorPadre.appendChild(contendorChat);
         contendorChat.appendChild(nombreContacto);
+
         contendorChat.appendChild(contenedorMensajes);
         contendorChat.appendChild(contenedorInputChat);
         
-        
-
         nombreContacto.innerHTML = nombre;
 
         contenedorEncabezadoChat.appendChild(nombreContacto);
@@ -104,22 +172,17 @@ document.addEventListener("DOMContentLoaded", function(){
         /*Aquí están las funciones style*/
         contenedorChat(contendorChat)
         contenedorMensaje(contenedorMensajes)
-        contenedorInputChatStyle(contenedorInputChat)
+        contenedorInputChatStyle(contenedorInputChat,tipo);
         contendorBackIconCreate(contenedorBackIcon);
         
-
         
     }
 
     crearGrupo();
 
-
 })
 
-
-
-
-function contenedorChat(contenedor){
+function contenedorChat(contenedor,){
 
     Object.assign(contenedor.style,{
         zIndex:"1",
@@ -133,7 +196,7 @@ function contenedorChat(contenedor){
     })
 }
 
-function contenedorInputChatStyle(objeto){
+function contenedorInputChatStyle(objeto, tipo){
     Object.assign(objeto.style,{
         width:"100%",
         height:"10%",
@@ -161,10 +224,9 @@ function contenedorInputChatStyle(objeto){
     objeto.appendChild(boton);
 
 
-    enviarMensaje(input);
+    enviarMensaje(input, tipo);
 
 }
-
 
 function contenedorMensaje(objeto){
 
@@ -175,7 +237,6 @@ function contenedorMensaje(objeto){
         flexDirection:"column"
     })
 }
-
 
 function contendorBackIconCreate(objeto){
 
@@ -191,9 +252,6 @@ function contendorBackIconCreate(objeto){
         back();    
     })
 
-    
-    
-
 }
 
 function back(){
@@ -205,22 +263,33 @@ function back(){
     lista.style.zIndex="1";
 }
 
-
-
-function enviarMensaje(objeto){
+function enviarMensaje(objeto, tipo){
 
     objeto.addEventListener("keydown", function(event){
         if (event.key === "Enter"){
             mensaje= objeto.value; 
             if (mensaje != ""){
+                if (tipo == "contacto"){
+                    const destinatario = document.getElementById("nombreContacto").innerText;
+                    stompClient.send("/app/mensajes", {}, JSON.stringify({
+                        
+                        destinatario: destinatario,
+                        mensaje: mensaje,
+                        hora: Date() 
+                    }));
 
-                const destinatario = document.getElementById("nombreContacto").innerText;
-                stompClient.send("/app/mensajes", {}, JSON.stringify({
-                    
-                    destinatario: destinatario,
-                    mensaje: mensaje,
-                    hora: Date()
-                }));
+                }
+
+                else {
+                    id =document.getElementById("grupoId").innerText;
+                    stompClient.send("/app/grupoMensajes", {}, JSON.stringify({
+                        
+                        id_grupo: id,
+                        mensaje: mensaje,
+                        hora: Date() 
+                    }));
+                }
+
                 objeto.value = ""; 
                 mostrarMensaje(mensaje,"remitente")
             }

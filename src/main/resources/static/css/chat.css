@@ -101,6 +101,10 @@ div.contactos:hover{
     background: #989898;
 }
 
+div.grupos:hover{
+    background: #989898;
+}
+
 #contenedorEncabezadoChat{
     width: 100%;
     height: 8%;
@@ -219,6 +223,7 @@ div.contactos:hover{
 }
 
 
+
 .select{
     width: 50%;
     height: auto;
@@ -251,4 +256,14 @@ div.contactos:hover{
     color: #f5efe3;
     border-color: #16436c;
     margin-top: 10px;
+}
+
+div.grupos{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #555555;
+    height:8% ;
+    width: 100%;
+    border-bottom: solid 0.5px #edece4;
 }

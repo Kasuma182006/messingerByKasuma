@@ -19,7 +19,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.messinger.app.Models.Grupos.Grupos;
+import com.messinger.app.Models.IntegratesGrupos.IntegrantesDTO;
 import com.messinger.app.Models.IntegratesGrupos.IntegrantesGrupos;
+import com.messinger.app.Models.MensajesGrupos.MensajesGrupos;
 import com.messinger.app.Models.contactos.contactos;
 import com.messinger.app.Models.contactos.contactosDTO;
 import com.messinger.app.Models.menssages.Mensajes;
@@ -30,6 +32,7 @@ import com.messinger.app.Repositories.MensajeRepositorie;
 import com.messinger.app.Repositories.contactoRepositorie;
 import com.messinger.app.Repositories.repositorieGrupos;
 import com.messinger.app.Repositories.repositorieIntegrantesGrupos;
+import com.messinger.app.Repositories.repositorieMensajesGrupos;
 import com.messinger.app.Repositories.repositorieUsuario;
 
 import jakarta.servlet.http.HttpServletRequest;
@@ -42,6 +45,8 @@ import jakarta.servlet.http.HttpSession;
 @Controller
 public class ControllerUsuario {
 
+
+    public  repositorieMensajesGrupos repositoriemensajesgrupos;
     public repositorieUsuario repositorieusuario;
     public contactoRepositorie contactoRepositorie;
     public MensajeRepositorie mensajesRepositorie;
@@ -52,12 +57,13 @@ public class ControllerUsuario {
     private SimpMessagingTemplate messagingTemplate;
 
     public ControllerUsuario(repositorieUsuario repositorieusuario,
-                             contactoRepositorie contactoRepositorie, MensajeRepositorie mensajeRepositorie, repositorieGrupos repositoriegrupos, repositorieIntegrantesGrupos repositorieintegrantesgrupos) {
+                             contactoRepositorie contactoRepositorie, MensajeRepositorie mensajeRepositorie, repositorieGrupos repositoriegrupos, repositorieIntegrantesGrupos repositorieintegrantesgrupos, repositorieMensajesGrupos repositoriemensajesgrupos) {
         this.repositorieusuario = repositorieusuario;
         this.contactoRepositorie = contactoRepositorie;
         this.mensajesRepositorie = mensajeRepositorie;
         this.repositoriegrupos = repositoriegrupos;
         this.repositorieintegrantesgrupos = repositorieintegrantesgrupos;
+        this.repositoriemensajesgrupos = repositoriemensajesgrupos;
 
     }
 
@@ -165,6 +171,7 @@ public class ControllerUsuario {
         System.out.println("usuario autenticado " + autenticacion + "," + mensaje.destinatario() + "," + mensaje.mensaje());
 
         if (autenticacion != null) {
+           
             messagingTemplate.convertAndSendToUser(mensaje.destinatario(), "/queue/messages", mensaje.mensaje());
             
             Mensajes newMensaje = new Mensajes();
@@ -182,6 +189,41 @@ public class ControllerUsuario {
     }
 
     @MessageMapping("/grupoMensajes")
+    public void grupoMensajes(MensajesGrupos mensaje, SimpMessageHeaderAccessor accessor){
+
+        Principal principal = accessor.getUser();
+        String autenticacion = null;
+        if (principal != null) {
+            autenticacion = principal.getName();
+        } else {
+            // 2) fallback a tu atributo de sesión (por compatibilidad)
+            Object idAttr = accessor.getSessionAttributes() != null ? accessor.getSessionAttributes().get("id") : null;
+            if (idAttr != null) {
+                autenticacion = idAttr.toString();
+            }
+        }
+
+        System.out.println("usuario autenticado " + autenticacion + mensaje.getId_grupo()+ mensaje.getMensaje() + mensaje.getHora());
+
+        mensaje.setId_usuario(autenticacion);
+
+        List<IntegrantesDTO> integrantes = repositorieintegrantesgrupos.buscarIntegrantes(mensaje.getId_grupo());
+
+        for (IntegrantesDTO i : integrantes){
+
+            messagingTemplate.convertAndSendToUser(i.id_usuario(),"/queue/messages",mensaje.getMensaje());
+
+            repositoriemensajesgrupos.save(mensaje);
+
+        }   
+
+
+
+        
+
+        
+
+    }
     
     @PostMapping("/agregarContacto")
     public String agregarContacto(@ModelAttribute contactos contacto, HttpServletRequest request) {
